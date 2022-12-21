@@ -20,3 +20,8 @@ Getting all beers, post and get
 http://127.0.0.1:8000/data/get_all_beers/
 ```
 
+### Tests
+Commande for running tests
+```
+DJANGO_SETTINGS_MODULE=Beer_server.config.django.local pytest
+```
