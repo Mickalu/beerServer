@@ -22,6 +22,8 @@ from BeerApp.urls.beer_urls import router as beer_router
 router = routers.DefaultRouter()
 router.registry.extend(beer_router.registry)
 
+app_name = "app_server"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("data/", include(router.urls))
