@@ -9,4 +9,6 @@ All environnement are present in folder **Beer_server/config/django**.
 ### local environnement
 For rnning the project in local environnement :
 
-``` python manage.py runserver --settings Beer_server.config.django.local ```
+```
+python manage.py runserver --settings Beer_server.config.django.local
+```
