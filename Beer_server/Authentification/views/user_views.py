@@ -14,7 +14,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request ) -> None:
         serializer = UserSerilizer(data=request.data)
 
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
