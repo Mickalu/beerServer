@@ -1,8 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
+import json
 
+from utils.API_utils.class_reponse_api import Response_API
 from Authentification.serializers.user_serializer import UserSerilizer
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -13,12 +14,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request ) -> None:
         serializer = UserSerilizer(data=request.data)
+        response_api = Response_API()
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            response_api.status = True
+            response_api.data = serializer.data
+            return Response(json.dumps(response_api.__dict__), status=status.HTTP_201_CREATED)
 
         else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            response_api.status = False
+            response_api.data = serializer.errors
+            return Response(json.dumps(response_api.__dict__), status=status.HTTP_400_BAD_REQUEST)
 
