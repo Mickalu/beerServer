@@ -20,10 +20,10 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             response_api.status = True
             response_api.data = serializer.data
-            return Response(json.dumps(response_api.__dict__), status=status.HTTP_201_CREATED)
+            return Response(response_api.__dict__, status=status.HTTP_201_CREATED)
 
         else:
             response_api.status = False
             response_api.data = serializer.errors
-            return Response(json.dumps(response_api.__dict__), status=status.HTTP_400_BAD_REQUEST)
+            return Response(response_api.__dict__, status=status.HTTP_400_BAD_REQUEST)
 
