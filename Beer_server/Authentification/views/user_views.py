@@ -12,7 +12,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self) -> User:
         user = self.request.user
 
-    def create(self, request ) -> None:
+    def create(self, request) -> None:
         serializer = UserSerilizer(data=request.data)
         response_api = Response_API()
 
@@ -26,4 +26,3 @@ class UserViewSet(viewsets.ModelViewSet):
             response_api.status = False
             response_api.data = serializer.errors
             return Response(response_api.__dict__, status=status.HTTP_400_BAD_REQUEST)
-
