@@ -1,22 +1,27 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
+from django.contrib.auth.models import User
+from rest_framework.test import APIClient
+from rest_framework.authtoken.models import Token
 
 from BeerApp.utils.factory.beer_factory import BeerFactory
+from BeerApp.utils.factory.user_factory import UserFactory
 from BeerApp.models.beer_model import Beer
-from ..beer_view import BeerViewSet
 from BeerApp.serializers.beer_serializers import BeerSerializer
 
 class TestBeerViewSet(TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         BeerFactory()
+        UserFactory()
+
+    def setUp(self) -> None:
+        self.user = User.objects.all()[0]
+        self.token = Token.objects.create(user = self.user)
+        self.client = APIClient()
 
     def test_get_method_beer_api_response_data(self):
-        factory_request = APIRequestFactory()
-        view = BeerViewSet.as_view({'get': 'list'})
-
-        request = factory_request.get("/data/get_all_beers/")
-        response = view(request)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        response = self.client.get("/data/get_all_beers/")
 
         response_data_expected = BeerSerializer(Beer.objects.all(), many=True)
 

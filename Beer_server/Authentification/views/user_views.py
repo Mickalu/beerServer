@@ -8,6 +8,7 @@ from Authentification.serializers.user_serializer import UserSerilizer
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerilizer
+    permission_classes = []
 
     def get_queryset(self) -> User:
         user = self.request.user
