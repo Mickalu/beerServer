@@ -18,13 +18,18 @@ from django.urls import path, include
 from rest_framework import routers
 
 from BeerApp.urls.beer_urls import router as beer_router
+from Authentification.urls.user_urls import router as user_registration_router
 
 router = routers.DefaultRouter()
 router.registry.extend(beer_router.registry)
+router.registry.extend(user_registration_router.registry)
 
 app_name = "app_server"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("data/", include(router.urls))
+    path("data/", include(router.urls)),
+    path("user/", include(user_registration_router.urls)),
 ]
+
+urlpatterns += user_registration_router.urls
