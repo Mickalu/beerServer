@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from BeerApp.urls.beer_urls import router as beer_router
-from Authentification.urls.user_urls import router as user_registration_router, urlpatterns as urlpatterns_authentification
+from Authentification.urls import router as user_registration_router
 
 
 router = routers.DefaultRouter()
@@ -31,7 +31,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("data/", include(router.urls)),
     path("user/", include(user_registration_router.urls)),
+    path("authentification/", include("Authentification.urls")),
 ]
 
 urlpatterns += user_registration_router.urls
-urlpatterns += urlpatterns_authentification
