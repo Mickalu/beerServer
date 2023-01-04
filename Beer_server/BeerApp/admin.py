@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Beer, LikedBeer
+from .models import Beer, Like
 
 # Register your models here.
 admin.site.register(Beer)
-admin.site.register(LikedBeer)
+admin.site.register(Like)

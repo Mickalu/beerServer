@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from BeerApp.models import Beer
 
-class LikedBeer(models.Model):
+class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     beer = models.ForeignKey(Beer, on_delete=models.CASCADE)
 
