@@ -12,14 +12,24 @@ class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
 
     def list(self, request):
+        response_api = Response_API()
 
+        try:
             user = get_user_by_token_headers(request)
             queryset = Like.objects.filter(user=user)
 
             serializer_data = LikeSerializerReturnData(queryset, many=True).data
             list_beers_id = convert_ordeddirect_to_list(serializer_data, 'beer')
 
-            return Response(list_beers_id, status=status.HTTP_200_OK)
+            response_api.status = True
+            response_api.data = list_beers_id
+            return Response(response_api.__dict__, status=status.HTTP_200_OK)
+
+        except Exception:
+            response_api.status = False
+            response_api.data = Exception
+
+            return Response(response_api.__dict__, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         user = get_user_by_token_headers(request)
