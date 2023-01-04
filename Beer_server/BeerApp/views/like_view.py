@@ -6,25 +6,24 @@ from BeerApp.serializers import LikeSerializer, LikeSerializerReturnData
 from BeerApp.models import Like
 from utils.API_utils.class_reponse_api import Response_API
 from utils.API_utils.token_utils import get_user_by_token_headers
+from BeerApp.services.convert_data_to_api_response import convert_ordeddirect_to_list
 
 class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
 
     def list(self, request):
-        try:
+
             user = get_user_by_token_headers(request)
-
             queryset = Like.objects.filter(user=user)
+
             serializer_data = LikeSerializerReturnData(queryset, many=True).data
+            list_beers_id = convert_ordeddirect_to_list(serializer_data, 'beer')
 
-            return Response(serializer_data, status=status.HTTP_201_CREATED)
-
-        except Exception:
-            return Response(Exception, status=status.HTTP_400_BAD_REQUEST)
+            return Response(list_beers_id, status=status.HTTP_200_OK)
 
     def create(self, request):
         user = get_user_by_token_headers(request)
-        data_from_request = request.data.dict()
+        data_from_request = request.data
         data_from_request["user"] = user.id
 
         serializer = LikeSerializer(data=data_from_request)
@@ -41,4 +40,5 @@ class LikeViewSet(viewsets.ModelViewSet):
             response_api.status = False
             response_api.data = serializer.errors
 
+            print(response_api.data)
             return Response(response_api.__dict__, status=status.HTTP_400_BAD_REQUEST)
