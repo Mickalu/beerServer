@@ -6,7 +6,7 @@ from BeerApp.serializers import LikeSerializer, LikeSerializerReturnData
 from BeerApp.models import Like
 from utils.API_utils.class_reponse_api import Response_API
 from utils.API_utils.token_utils import get_user_by_token_headers
-from BeerApp.services.convert_data_to_api_response import convert_ordeddirect_to_list
+from utils.API_utils.get_serializer_data import convert_ordeddirect_to_list
 
 class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer

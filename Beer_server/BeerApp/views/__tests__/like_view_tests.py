@@ -7,9 +7,10 @@ from django.contrib.auth.models import User
 from BeerApp.models import Like, Beer
 from BeerApp.views.like_view import LikeViewSet
 from BeerApp.serializers.like_serializer import LikeSerializerReturnData
-from BeerApp.utils.factory.user_factory import UserFactory
 from BeerApp.utils.factory.beer_factory import BeerFactory
 from BeerApp.utils.factory.like_factory import LikeFactory
+from utils.API_utils.get_serializer_data import convert_ordeddirect_to_list
+from utils.API_utils.class_reponse_api import Response_API
 
 class TestLikeViewSet(TestCase):
     @classmethod
@@ -23,6 +24,7 @@ class TestLikeViewSet(TestCase):
         for i in range(2): LikeFactory(user=self.user)
 
     def test_get_user_likes_list(self):
+
         factory = APIRequestFactory(
             content_type="application/json",
         ).get("beer/get-likes/", HTTP_AUTHORIZATION='Token {}'.format(self.token.key))
@@ -31,7 +33,10 @@ class TestLikeViewSet(TestCase):
         response = viewSet_get_user_beers(factory)
 
         queryset_user_likes = Like.objects.filter(user=self.user)
-        message_expected = LikeSerializerReturnData(queryset_user_likes, many=True).data
+        serializer_data = LikeSerializerReturnData(queryset_user_likes, many=True).data
+        response_api = Response_API(status=True, data= convert_ordeddirect_to_list(serializer_data, 'beer'))
+
+        message_expected = response_api.__dict__
 
         self.assertEqual(response.data, message_expected)
 
@@ -45,7 +50,7 @@ class TestLikeViewSet(TestCase):
 
         factory = APIRequestFactory(
             content_type = "application/json",
-        ).post("beer/create-like/", data, HTTP_AUTHORIZATION='Token {}'.format(self.token.key))
+        ).post("beer/create-like/", data, HTTP_AUTHORIZATION='Token {}'.format(self.token.key), format='json')
 
         view_create = LikeViewSet.as_view({'post': 'create'})
         response = view_create(factory)
