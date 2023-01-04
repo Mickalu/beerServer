@@ -57,6 +57,26 @@ class TestLikeViewSet(TestCase):
 
         beers_liked_updated = Like.objects.filter(user=self.user).values_list("beer", flat=True)
 
-        self.assertEqual(response.data['status'], True)
+        self.assertTrue(response.data['status'], True)
         self.assertEqual(response.data['data']['user'], self.user.id)
         self.assertTrue(response.data['data']['beer'] in beers_liked_updated)
+
+    def test_try_create_like_already_exist(self):
+        beers_liked = Like.objects.filter(user=self.user).values_list("beer", flat=True)
+        beer_id = Beer.objects.filter(pk__in = beers_liked)[0].id
+
+        data = { 'beer': beer_id }
+
+        factory = APIRequestFactory().post(
+            "beer/create-like/",
+            data,
+            HTTP_AUTHORIZATION='Token {}'.format(self.token.key),
+            format='json',
+        )
+
+        view_create = LikeViewSet.as_view({'post': 'create'})
+        response = view_create(factory)
+        data_expected = "The Fields User, Beer Must Make A Unique Set."
+
+        self.assertFalse(response.data['status'], False)
+        self.assertEqual(response.data['data'], data_expected)

@@ -4,9 +4,8 @@ import json
 
 from BeerApp.serializers import LikeSerializer, LikeSerializerReturnData
 from BeerApp.models import Like
-from utils.API_utils.class_reponse_api import Response_API
-from utils.API_utils.token_utils import get_user_by_token_headers
-from utils.API_utils.get_serializer_data import convert_ordeddirect_to_list
+
+from utils.API_utils import Response_API, get_user_by_token_headers, convert_ordeddirect_to_list, handle_serializer_error
 
 class LikeViewSet(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
@@ -48,7 +47,6 @@ class LikeViewSet(viewsets.ModelViewSet):
 
         else:
             response_api.status = False
-            response_api.data = serializer.errors
+            response_api.data = handle_serializer_error(serializer.errors)
 
-            print(response_api.data)
             return Response(response_api.__dict__, status=status.HTTP_400_BAD_REQUEST)
