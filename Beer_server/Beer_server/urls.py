@@ -32,6 +32,7 @@ urlpatterns = [
     path("data/", include(router.urls)),
     path("user/", include(user_registration_router.urls)),
     path("authentification/", include("Authentification.urls")),
+    path("beer/", include("BeerApp.urls")),
 ]
 
 urlpatterns += user_registration_router.urls
